@@ -16,6 +16,7 @@ using System.Drawing;
 using System.Xml;
 using MColor = System.Windows.Media.Color;
 using DColor = System.Drawing.Color;
+using System.IO;
 
 namespace XMLMaker
 {
@@ -40,11 +41,11 @@ namespace XMLMaker
             DColor CurrentColor;
             List<DColor> ColorList = new List<DColor>();
             Bitmap image1 = (Bitmap)System.Drawing.Image.FromFile(pictureTB.Text);
-            Img.Source = new BitmapImage(new Uri(Environment.CurrentDirectory + "\\" + pictureTB.Text));
+            Img1.Source = new BitmapImage(new Uri(Environment.CurrentDirectory + "\\" + pictureTB.Text));
+            Img1.Width = image1.Width;
+            Img1.Height = image1.Height;
             double maxSim = int.Parse(maxSimTB.Text);
             int maxIndex = 0;
-            Img.Width = image1.Width;
-            Img.Height = image1.Height;
             mat = new int[image1.Height, image1.Width];
             for (int i = 0; i < image1.Height; i++)
             {
@@ -66,9 +67,13 @@ namespace XMLMaker
                         ColorList.Add(CurrentColor);
                         maxIndex = ColorList.Count - 1;
                     }
+                    image1.SetPixel(j, i, ColorList[maxIndex]);
                     mat[i, j] = maxIndex;
                 }
             }
+            Img2.Source = BitmapToImageSource(image1);
+            Img2.Width = image1.Width;
+            Img2.Height = image1.Height;
             ColorsSP.Children.Clear();
             StackPanel sp = new StackPanel();
             sp.Orientation = Orientation.Horizontal;
@@ -121,6 +126,22 @@ namespace XMLMaker
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Close();
+        }
+
+        BitmapImage BitmapToImageSource(Bitmap bitmap)
+        {
+            using (MemoryStream memory = new MemoryStream())
+            {
+                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                memory.Position = 0;
+                BitmapImage bitmapimage = new BitmapImage();
+                bitmapimage.BeginInit();
+                bitmapimage.StreamSource = memory;
+                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapimage.EndInit();
+
+                return bitmapimage;
+            }
         }
     }
 }

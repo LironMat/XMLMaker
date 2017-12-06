@@ -22,7 +22,8 @@
             </StackPanel>
             <Button Name="scanB" Content="scan picture" Width="100" HorizontalAlignment="Left" Click="ScanB_Click" ></Button>
             <Label></Label>
-            <Image Name="Img" Grid.Column="0"></Image>
+            <Image Name="Img1" Grid.Column="0"></Image>
+            <Image Name="Img2" Grid.Column="0"></Image>
             <TextBlock Name="debugTBlocks" TextWrapping="Wrap"></TextBlock>
         </StackPanel>
         <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Column="1" HorizontalAlignment="Right">

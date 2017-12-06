@@ -14,11 +14,11 @@
         <StackPanel Orientation="Vertical" Width="auto">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top">
                 <Label Content="picture path"></Label>
-                <TextBox Name="pictureTB" Width="100" Height="20" Text="GetPicture.jpg"></TextBox>
+                <TextBox Name="pictureTB" Width="100" Height="20" Text="pic2.png"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top">
                 <Label Content="maximum similarity"/>
-                <TextBox Name="maxSimTB" Width="61" Height="20" Text="50"></TextBox>
+                <TextBox Name="maxSimTB" Width="61" Height="20" Text="0"></TextBox>
             </StackPanel>
             <Button Name="scanB" Content="scan picture" Width="100" HorizontalAlignment="Left" Click="ScanB_Click" ></Button>
             <Label></Label>

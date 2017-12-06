@@ -41,9 +41,7 @@ namespace XMLMaker
             DColor CurrentColor;
             List<DColor> ColorList = new List<DColor>();
             Bitmap image1 = (Bitmap)System.Drawing.Image.FromFile(pictureTB.Text);
-            Img1.Source = new BitmapImage(new Uri(Environment.CurrentDirectory + "\\" + pictureTB.Text));
-            Img1.Width = image1.Width;
-            Img1.Height = image1.Height;
+            Img1.Source = new BitmapImage(new Uri(Environment.CurrentDirectory + "\\" + pictureTB.Text)); 
             double maxSim = int.Parse(maxSimTB.Text);
             int maxIndex = 0;
             mat = new int[image1.Height, image1.Width];
@@ -72,8 +70,6 @@ namespace XMLMaker
                 }
             }
             Img2.Source = BitmapToImageSource(image1);
-            Img2.Width = image1.Width;
-            Img2.Height = image1.Height;
             ColorsSP.Children.Clear();
             StackPanel sp = new StackPanel();
             sp.Orientation = Orientation.Horizontal;

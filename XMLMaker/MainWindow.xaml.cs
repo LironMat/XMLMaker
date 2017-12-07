@@ -1,22 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Drawing;
 using System.Xml;
-using MColor = System.Windows.Media.Color;
 using DColor = System.Drawing.Color;
-using System.IO;
+using MColor = System.Windows.Media.Color;
 
 namespace XMLMaker
 {
@@ -41,7 +34,7 @@ namespace XMLMaker
             DColor CurrentColor;
             List<DColor> ColorList = new List<DColor>();
             Bitmap image1 = (Bitmap)System.Drawing.Image.FromFile(pictureTB.Text);
-            Img1.Source = new BitmapImage(new Uri(Environment.CurrentDirectory + "\\" + pictureTB.Text)); 
+            Img1.Source = new BitmapImage(new Uri(Environment.CurrentDirectory + "\\" + pictureTB.Text));
             double maxSim = int.Parse(maxSimTB.Text);
             int maxIndex = 0;
             mat = new int[image1.Height, image1.Width];
@@ -95,8 +88,22 @@ namespace XMLMaker
             createB.Content = "create file";
             createB.Width = 100;
             createB.HorizontalAlignment = HorizontalAlignment.Left;
+            Button savePictueB = new Button();
+            savePictueB.Content = "save picture";
+            savePictueB.Width = 100;
+            savePictueB.HorizontalAlignment = HorizontalAlignment.Left;
+            savePictueB.Click += SavePictueB_Click;
             ColorsSP.Children.Add(createB);
+            ColorsSP.Children.Add(savePictueB);
         }
+
+        private void SavePictueB_Click(object sender, RoutedEventArgs e)
+        {
+            Bitmap b = BitmapFromSource(Img2.Source as BitmapImage);
+            string postDot = pictureTB.Text.Substring(pictureTB.Text.IndexOf('.'));
+            b.Save(pictureTB.Text.Substring(0, pictureTB.Text.IndexOf('.')) + '_' + maxSimTB.Text + '_' + DateTime.Now.ToString("yyyyMMddHHmmss") + postDot);
+        }
+
         void createB_Click(object sender, RoutedEventArgs e)
         {
             XmlTextWriter writer = new XmlTextWriter(pictureTB.Text.Substring(0, pictureTB.Text.IndexOf('.')) + '_' + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xml", System.Text.Encoding.UTF8);
@@ -122,6 +129,24 @@ namespace XMLMaker
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Close();
+        }
+
+        public Bitmap BitmapFromSource(System.Windows.Media.Imaging.BitmapSource bitmapsource)
+        {
+            //convert image format
+            var src = new System.Windows.Media.Imaging.FormatConvertedBitmap();
+            src.BeginInit();
+            src.Source = bitmapsource;
+            src.DestinationFormat = System.Windows.Media.PixelFormats.Bgra32;
+            src.EndInit();
+
+            //copy to bitmap
+            Bitmap bitmap = new Bitmap(src.PixelWidth, src.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            var data = bitmap.LockBits(new System.Drawing.Rectangle(System.Drawing.Point.Empty, bitmap.Size), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            src.CopyPixels(System.Windows.Int32Rect.Empty, data.Scan0, data.Height * data.Stride, data.Stride);
+            bitmap.UnlockBits(data);
+
+            return bitmap;
         }
 
         BitmapImage BitmapToImageSource(Bitmap bitmap)
